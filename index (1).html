@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>World Cup 2026 — Football Terms Quiz</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<style>
+  :root{
+    --wc-green:#0a8a3e;
+    --wc-green-dark:#04401d;
+    --wc-red:#d6202c;
+    --wc-blue:#0b3d91;
+    --wc-gold:#ffc62f;
+    --card:#0d1f14;
+    --card-border:rgba(255,255,255,0.08);
+    --text:#f4f7f4;
+    --muted:#9fb3a4;
+    --danger:#ff5d6c;
+  }
+  *{box-sizing:border-box;}
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap');
+  body{
+    margin:0;
+    min-height:100vh;
+    font-family:'Inter','Segoe UI',Roboto,Arial,sans-serif;
+    background:
+      radial-gradient(circle at 15% 10%, rgba(255,198,47,0.18), transparent 40%),
+      radial-gradient(circle at 90% 85%, rgba(214,32,44,0.20), transparent 45%),
+      linear-gradient(135deg,var(--wc-green-dark),#062b13 45%,#04140a 100%);
+    color:var(--text);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+  }
+  .card{
+    width:100%;
+    max-width:660px;
+    background:var(--card);
+    border:1px solid var(--card-border);
+    border-radius:20px;
+    padding:28px 28px 22px;
+    box-shadow:0 25px 60px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,198,47,0.06);
+    position:relative;
+    overflow:hidden;
+  }
+  .card::before{
+    content:"";
+    position:absolute;
+    top:0; left:0; right:0;
+    height:6px;
+    background:linear-gradient(90deg,var(--wc-green),var(--wc-gold),var(--wc-red),var(--wc-blue));
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:2px;
+  }
+  .brand-badge{
+    background:linear-gradient(135deg,var(--wc-gold),#ffe07a);
+    color:#3a2a00;
+    font-weight:800;
+    font-size:11px;
+    letter-spacing:.5px;
+    padding:4px 9px;
+    border-radius:999px;
+  }
+  h1{
+    margin:8px 0 4px;
+    font-family:'Poppins','Segoe UI',sans-serif;
+    font-size:22px;
+    font-weight:800;
+    letter-spacing:-0.2px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .meta{
+    color:var(--muted);
+    font-size:13px;
+    margin-bottom:18px;
+  }
+  .question-box{
+    background:linear-gradient(135deg,rgba(10,138,62,0.20),rgba(255,198,47,0.10));
+    border:1px solid rgba(255,198,47,0.18);
+    border-radius:14px;
+    padding:22px 20px;
+    text-align:center;
+    margin-bottom:18px;
+    position:relative;
+  }
+  .arabic-term{
+    font-size:30px;
+    font-weight:800;
+    direction:rtl;
+  }
+  .question-sub{
+    margin-top:6px;
+    font-family:'Inter',sans-serif;
+    font-size:13px;
+    color:var(--muted);
+  }
+  .options{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    margin-bottom:18px;
+  }
+  .option{
+    background:#13291b;
+    border:1px solid var(--card-border);
+    color:var(--text);
+    border-radius:12px;
+    padding:16px 18px;
+    font-family:'Poppins','Segoe UI',sans-serif;
+    font-size:15px;
+    font-weight:600;
+    letter-spacing:0.1px;
+    line-height:1.35;
+    text-align:center;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:58px;
+    cursor:pointer;
+    transition:transform .12s ease, border-color .12s ease, background .12s ease;
+  }
+  .option:hover:not(:disabled){
+    transform:translateY(-2px);
+    border-color:var(--wc-gold);
+    background:#173420;
+  }
+  .option:disabled{ cursor:default; }
+  .option.correct{
+    background:rgba(10,138,62,0.35);
+    border-color:var(--wc-green);
+    color:#c9f7d8;
+  }
+  .option.wrong{
+    background:rgba(214,32,44,0.25);
+    border-color:var(--wc-red);
+    color:#ffc6cb;
+  }
+  .controls{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .controls-left{ display:flex; gap:10px; flex-wrap:wrap; }
+  button{
+    background:linear-gradient(135deg,var(--wc-gold),#ffd966);
+    color:#3a2a00;
+    border:none;
+    padding:11px 18px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:800;
+    font-size:14px;
+    transition:opacity .12s ease;
+  }
+  button:disabled{ opacity:.4; cursor:default; }
+  button.secondary{
+    background:#13291b;
+    color:var(--text);
+    border:1px solid var(--card-border);
+  }
+  select{
+    padding:10px 12px;
+    border-radius:10px;
+    border:1px solid var(--card-border);
+    background:#13291b;
+    color:var(--text);
+    font-size:13px;
+  }
+  .result{
+    margin-top:14px;
+    font-weight:800;
+    font-size:15px;
+    min-height:20px;
+  }
+  .progress{
+    height:8px;
+    background:#13291b;
+    border-radius:999px;
+    overflow:hidden;
+    margin:18px 0 16px;
+  }
+  .progress > i{
+    display:block;
+    height:100%;
+    background:linear-gradient(90deg,var(--wc-green),var(--wc-gold),var(--wc-red));
+    width:0%;
+    transition:width .25s ease;
+  }
+  .footer{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-size:13px;
+    color:var(--muted);
+    border-top:1px solid var(--card-border);
+    padding-top:14px;
+  }
+  .footer b{ color:var(--text); }
+  @media (max-width:480px){
+    .options{ grid-template-columns:1fr; }
+    .card{ padding:20px; }
+    .arabic-term{ font-size:26px; }
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="brand"><span class="brand-badge">FIFA WORLD CUP 2026™ EDITION</span></div>
+    <h1>⚽ Football Terms Quiz</h1>
+    <div class="meta" id="meta">Loading…</div>
+
+    <div class="question-box">
+      <div class="arabic-term" id="arabicTerm"></div>
+      <div class="question-sub" id="questionSub">What does this mean?</div>
+    </div>
+
+    <div class="options" id="options"></div>
+
+    <div class="result" id="result"></div>
+    <div class="progress" aria-hidden="true"><i id="progressBar"></i></div>
+
+    <div class="controls">
+      <div class="controls-left">
+        <select id="lang" title="Answer language">
+          <option value="either">Mixed (EN/ID)</option>
+          <option value="english">English only</option>
+          <option value="indonesian">Indonesian only</option>
+        </select>
+        <button id="skipBtn" class="secondary">Skip</button>
+      </div>
+      <button id="shuffleBtn" class="secondary">Restart</button>
+    </div>
+
+    <div class="footer" style="margin-top:14px">
+      <div>Score: <b id="score">0</b></div>
+      <div>Correct: <b id="correctCount">0</b> / <span id="totalCount">0</span></div>
+    </div>
+  </div>
+
+<script>
+  // Each term may include altEnglish / altIndonesian: common alternate translations
+  // that are sometimes used as the "correct" answer text to widen recognition.
+  const terms = [
+    {arabic:"كرة القدم",english:"football",indonesian:"sepak bola",altEnglish:"soccer"},
+    {arabic:"مباراة",english:"match",indonesian:"pertandingan"},
+    {arabic:"فريق",english:"team",indonesian:"tim",altIndonesian:"kesebelasan"},
+    {arabic:"لاعب",english:"player",indonesian:"pemain"},
+    {arabic:"مدرب",english:"coach",indonesian:"pelatih",altEnglish:"manager"},
+    {arabic:"حكم",english:"referee",indonesian:"wasit",altEnglish:"umpire"},
+    {arabic:"مساعد الحكم",english:"assistant referee",indonesian:"asisten wasit",altEnglish:"linesman"},
+    {arabic:"ملعب",english:"stadium",indonesian:"stadion"},
+    {arabic:"جمهور",english:"fans",indonesian:"penonton",altIndonesian:"suporter"},
+    {arabic:"هدف",english:"goal",indonesian:"gol"},
+    {arabic:"مرمى",english:"goalpost",indonesian:"gawang"},
+    {arabic:"حارس المرمى",english:"goalkeeper",indonesian:"kiper",altEnglish:"keeper"},
+    {arabic:"دفاع",english:"defense",indonesian:"pertahanan"},
+    {arabic:"هجوم",english:"attack",indonesian:"serangan"},
+    {arabic:"وسط الملعب",english:"midfield",indonesian:"gelandang"},
+    {arabic:"جناح",english:"wing",indonesian:"sayap"},
+    {arabic:"رأسية",english:"header",indonesian:"sundulan"},
+    {arabic:"تمريرة",english:"pass",indonesian:"operan",altIndonesian:"umpan"},
+    {arabic:"تسديدة",english:"shot",indonesian:"tendangan"},
+    {arabic:"ركلة البداية",english:"kick-off",indonesian:"tendangan mula"},
+    {arabic:"ركلة جزاء",english:"penalty",indonesian:"tendangan penalti",altIndonesian:"penalti"},
+    {arabic:"ركلة حرة",english:"free kick",indonesian:"tendangan bebas"},
+    {arabic:"ركلة ركنية",english:"corner kick",indonesian:"tendangan sudut",altEnglish:"corner"},
+    {arabic:"تسلل",english:"offside",indonesian:"offside"},
+    {arabic:"خطأ",english:"foul",indonesian:"pelanggaran"},
+    {arabic:"بطاقة صفراء",english:"yellow card",indonesian:"kartu kuning"},
+    {arabic:"بطاقة حمراء",english:"red card",indonesian:"kartu merah"},
+    {arabic:"تبديل",english:"substitution",indonesian:"pergantian"},
+    {arabic:"لاعب احتياطي",english:"substitute",indonesian:"pemain cadangan",altEnglish:"bench player"},
+    {arabic:"وقت إضافي",english:"extra time",indonesian:"waktu tambahan"},
+    {arabic:"ضربات الترجيح",english:"penalty shootout",indonesian:"adu penalti"},
+    {arabic:"فوز",english:"win",indonesian:"menang"},
+    {arabic:"خسارة",english:"loss",indonesian:"kalah"},
+    {arabic:"تعادل",english:"draw",indonesian:"seri",altEnglish:"tie"},
+    {arabic:"دوري",english:"league",indonesian:"liga"},
+    {arabic:"كأس",english:"cup",indonesian:"piala"},
+    {arabic:"بطولة",english:"tournament",indonesian:"turnamen"},
+    {arabic:"كأس العالم",english:"world cup",indonesian:"piala dunia"},
+    {arabic:"دوري الأبطال",english:"champions league",indonesian:"liga champions"},
+    {arabic:"تصفيات",english:"qualifiers",indonesian:"kualifikasi"},
+    {arabic:"نصف النهائي",english:"semi-final",indonesian:"semifinal"},
+    {arabic:"النهائي",english:"final",indonesian:"final"},
+    {arabic:"مهاجم",english:"striker",indonesian:"penyerang",altEnglish:"forward"},
+    {arabic:"مدافع",english:"defender",indonesian:"bek"},
+    {arabic:"وسط",english:"midfielder",indonesian:"gelandang"},
+    {arabic:"جناح أيمن",english:"right winger",indonesian:"sayap kanan"},
+    {arabic:"جناح أيسر",english:"left winger",indonesian:"sayap kiri"},
+    {arabic:"تسديدة بعيدة",english:"long shot",indonesian:"tendangan jarak jauh"},
+    {arabic:"تمريرة طويلة",english:"long pass",indonesian:"operan panjang"},
+    {arabic:"تمريرة قصيرة",english:"short pass",indonesian:"operan pendek"},
+    {arabic:"مراوغة",english:"dribble",indonesian:"menggiring bola"},
+    {arabic:"ضغط",english:"pressing",indonesian:"menekan"},
+    {arabic:"هجمة مرتدة",english:"counter-attack",indonesian:"serangan balik"},
+    {arabic:"استحواذ",english:"possession",indonesian:"penguasaan bola"},
+    {arabic:"تسديد مباشر",english:"direct shot",indonesian:"tendangan langsung"},
+    {arabic:"تسديد غير مباشر",english:"indirect shot",indonesian:"tendangan tidak langsung"},
+    {arabic:"خط الوسط",english:"midfield line",indonesian:"garis tengah"},
+    {arabic:"خط الدفاع",english:"defensive line",indonesian:"lini pertahanan"},
+    {arabic:"خط الهجوم",english:"offensive line",indonesian:"lini serangan"},
+    {arabic:"صافرة",english:"whistle",indonesian:"peluit"},
+    {arabic:"إصابة",english:"injury",indonesian:"cedera"},
+    {arabic:"علاج",english:"treatment",indonesian:"perawatan"},
+    {arabic:"مدرجات",english:"stands",indonesian:"tribun"},
+    {arabic:"قميص",english:"jersey",indonesian:"seragam",altEnglish:"shirt"},
+    {arabic:"حذاء كرة القدم",english:"cleats",indonesian:"sepatu bola",altEnglish:"boots"},
+    {arabic:"علم",english:"flag",indonesian:"bendera"},
+    {arabic:"صافرة النهاية",english:"final whistle",indonesian:"peluit akhir"},
+    {arabic:"حكم الفيديو",english:"VAR",indonesian:"VAR"},
+    {arabic:"تقنية خط المرمى",english:"goal-line technology",indonesian:"teknologi garis gawang"},
+    {arabic:"منتخب",english:"national team",indonesian:"tim nasional",altIndonesian:"timnas"},
+    {arabic:"تشجيع",english:"cheer",indonesian:"sorakan"},
+    {arabic:"هتاف",english:"chant",indonesian:"nyanyian"},
+    {arabic:"إصابة بالرأس",english:"head injury",indonesian:"cedera kepala"},
+    {arabic:"إصابة عضلية",english:"muscle injury",indonesian:"cedera otot"},
+
+    {arabic:"كأس العالم 2026",english:"World Cup 2026",indonesian:"Piala Dunia 2026"},
+    {arabic:"الدولة المضيفة",english:"host nation",indonesian:"tuan rumah",altEnglish:"host country"},
+    {arabic:"قرعة",english:"draw (group stage)",indonesian:"undian grup",altEnglish:"group draw"},
+    {arabic:"دور المجموعات",english:"group stage",indonesian:"fase grup"},
+    {arabic:"الدور ربع النهائي",english:"quarter-final",indonesian:"perempat final"},
+    {arabic:"هاتريك",english:"hat-trick",indonesian:"hattrick"},
+    {arabic:"شباك نظيفة",english:"clean sheet",indonesian:"clean sheet",altEnglish:"shutout"},
+    {arabic:"الكرة الذهبية",english:"Golden Ball",indonesian:"Bola Emas"},
+    {arabic:"الحذاء الذهبي",english:"Golden Boot",indonesian:"Sepatu Emas"},
+    {arabic:"القفاز الذهبي",english:"Golden Glove",indonesian:"Sarung Tangan Emas"},
+    {arabic:"كابتن الفريق",english:"team captain",indonesian:"kapten tim",altEnglish:"captain"},
+    {arabic:"نائب الكابتن",english:"vice-captain",indonesian:"wakil kapten"},
+    {arabic:"تشكيلة",english:"line-up",indonesian:"susunan pemain",altEnglish:"starting eleven"},
+    {arabic:"تكتيك",english:"tactics",indonesian:"taktik"},
+    {arabic:"خطة لعب",english:"game plan",indonesian:"strategi permainan"},
+    {arabic:"تصنيف فيفا",english:"FIFA ranking",indonesian:"peringkat FIFA"},
+    {arabic:"انتقال لاعب",english:"transfer",indonesian:"transfer pemain"},
+    {arabic:"عقد",english:"contract",indonesian:"kontrak"},
+    {arabic:"إعارة",english:"loan (transfer)",indonesian:"pinjaman"},
+    {arabic:"موسم",english:"season",indonesian:"musim"},
+    {arabic:"جدول الترتيب",english:"standings table",indonesian:"klasemen",altEnglish:"league table"},
+    {arabic:"نقاط",english:"points",indonesian:"poin"},
+    {arabic:"فارق الأهداف",english:"goal difference",indonesian:"selisih gol"},
+    {arabic:"هدف ذاتي",english:"own goal",indonesian:"gol bunuh diri"},
+    {arabic:"هدف رائع",english:"wonder goal",indonesian:"gol indah"},
+    {arabic:"شوط أول",english:"first half",indonesian:"babak pertama"},
+    {arabic:"شوط ثاني",english:"second half",indonesian:"babak kedua"},
+    {arabic:"استراحة",english:"half-time",indonesian:"jeda babak"},
+    {arabic:"وقت محتسب بدل ضائع",english:"stoppage time",indonesian:"injury time",altEnglish:"added time"},
+    {arabic:"غرفة الملابس",english:"locker room",indonesian:"ruang ganti",altEnglish:"dressing room"},
+    {arabic:"نفق اللاعبين",english:"players' tunnel",indonesian:"terowongan pemain"},
+    {arabic:"كرة ثابتة",english:"set piece",indonesian:"bola mati"},
+    {arabic:"حارس احتياطي",english:"backup goalkeeper",indonesian:"kiper cadangan"},
+    {arabic:"منطقة الجزاء",english:"penalty box",indonesian:"kotak penalti",altEnglish:"penalty area"},
+    {arabic:"دائرة المنتصف",english:"center circle",indonesian:"lingkaran tengah"},
+    {arabic:"خط التماس",english:"touchline",indonesian:"garis pinggir"},
+    {arabic:"بث مباشر",english:"live broadcast",indonesian:"siaran langsung"},
+    {arabic:"تتويج",english:"trophy ceremony",indonesian:"upacara penyerahan trofi"},
+    {arabic:"الرعاة الرسميون",english:"official sponsors",indonesian:"sponsor resmi"},
+    {arabic:"تذكرة المباراة",english:"match ticket",indonesian:"tiket pertandingan"},
+    {arabic:"كرة المباراة الرسمية",english:"official match ball",indonesian:"bola pertandingan resmi"},
+    {arabic:"تميمة البطولة",english:"tournament mascot",indonesian:"maskot turnamen"}
+  ];
+
+  let order = [...Array(terms.length).keys()];
+  let idx = 0, score = 0, correctCount = 0;
+  let currentLang = 'either';
+  let locked = false;
+
+  const arabicTermEl = document.getElementById('arabicTerm');
+  const questionSubEl = document.getElementById('questionSub');
+  const metaEl = document.getElementById('meta');
+  const optionsEl = document.getElementById('options');
+  const resultEl = document.getElementById('result');
+  const progressBar = document.getElementById('progressBar');
+  const scoreEl = document.getElementById('score');
+  const correctCountEl = document.getElementById('correctCount');
+  const totalCountEl = document.getElementById('totalCount');
+  const langSel = document.getElementById('lang');
+
+  totalCountEl.textContent = terms.length;
+
+  document.getElementById('skipBtn').addEventListener('click', nextQuestion);
+  document.getElementById('shuffleBtn').addEventListener('click', restart);
+  langSel.addEventListener('change', () => { currentLang = langSel.value; });
+
+  function shuffleArray(arr){
+    return arr.sort(() => Math.random() - 0.5);
+  }
+
+  function pickLangForQuestion(){
+    if(currentLang === 'english') return 'english';
+    if(currentLang === 'indonesian') return 'indonesian';
+    return Math.random() < 0.5 ? 'english' : 'indonesian';
+  }
+
+  function displayTranslation(term, lang){
+    const altKey = lang === 'english' ? 'altEnglish' : 'altIndonesian';
+    if(term[altKey] && Math.random() < 0.4){
+      return term[altKey];
+    }
+    return term[lang];
+  }
+
+  function buildOptions(term, lang){
+    const correctAnswer = displayTranslation(term, lang);
+    const pool = terms.filter(t => t !== term).map(t => t[lang]);
+    const distractors = shuffleArray([...new Set(pool)]).slice(0,3);
+    const opts = shuffleArray([correctAnswer, ...distractors]);
+    return { opts, correctAnswer };
+  }
+
+  function loadQuestion(){
+    locked = false;
+    const term = terms[order[idx]];
+    const lang = pickLangForQuestion();
+    arabicTermEl.textContent = term.arabic;
+    questionSubEl.textContent = `Choose the correct ${lang === 'english' ? 'English' : 'Indonesian'} translation`;
+    metaEl.textContent = `Question ${idx+1} / ${terms.length}`;
+    resultEl.textContent = '';
+
+    const { opts, correctAnswer } = buildOptions(term, lang);
+    optionsEl.innerHTML = '';
+    opts.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.className = 'option';
+      btn.textContent = opt;
+      btn.addEventListener('click', () => selectOption(btn, opt, correctAnswer));
+      optionsEl.appendChild(btn);
+    });
+
+    updateProgress();
+  }
+
+  function selectOption(btn, chosen, correctAnswer){
+    if(locked) return;
+    locked = true;
+    const allBtns = optionsEl.querySelectorAll('.option');
+    allBtns.forEach(b => {
+      b.disabled = true;
+      if(b.textContent === correctAnswer) b.classList.add('correct');
+    });
+
+    if(chosen === correctAnswer){
+      btn.classList.add('correct');
+      resultEl.textContent = '✅ Correct!';
+      resultEl.style.color = 'var(--wc-green)';
+      score += 10;
+      correctCount += 1;
+    } else {
+      btn.classList.add('wrong');
+      resultEl.textContent = `❌ Wrong — correct answer: "${correctAnswer}"`;
+      resultEl.style.color = 'var(--danger)';
+    }
+    updateScore();
+
+    setTimeout(() => {
+      idx++;
+      if(idx >= terms.length) showFinal();
+      else loadQuestion();
+    }, 1000);
+  }
+
+  function nextQuestion(){
+    if(locked) return;
+    idx++;
+    if(idx >= terms.length) showFinal();
+    else loadQuestion();
+  }
+
+  function updateProgress(){
+    const pct = Math.round((idx / terms.length) * 100);
+    progressBar.style.width = pct + '%';
+  }
+
+  function updateScore(){
+    scoreEl.textContent = score;
+    correctCountEl.textContent = correctCount;
+  }
+
+  function showFinal(){
+    arabicTermEl.textContent = '🏆 Quiz complete!';
+    questionSubEl.textContent = '';
+    metaEl.textContent = `You answered ${correctCount} of ${terms.length} correctly`;
+    optionsEl.innerHTML = '';
+    resultEl.textContent = `Final score: ${score}`;
+    resultEl.style.color = 'var(--wc-gold)';
+    progressBar.style.width = '100%';
+  }
+
+  function restart(){
+    order = shuffleArray([...Array(terms.length).keys()]);
+    idx = 0; score = 0; correctCount = 0;
+    updateScore();
+    loadQuestion();
+  }
+
+  restart();
+</script>
+</body>
+</html>
